@@ -11,7 +11,7 @@ class Payment(db.Model):
     payment_number = db.Column(db.Integer, nullable=False, unique=True)
     value = db.Column(NUMERIC(10, 2), nullable=False)
     paid = db.Column(db.Boolean, default=False)
-    bank_payment_id = db.Column(db.Integer, nullable=True)
+    bank_payment_id = db.Column(db.String(200), nullable=True)
     qr_code = db.Column(db.String(255), nullable=True)
     expiration_date = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
