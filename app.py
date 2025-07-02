@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, render_template
 from repository.database import db
 from models.payment import Payment
 from datetime import datetime, timedelta
 from payments.pix import Pix
+from uuid import UUID
 
 app = Flask(__name__)
 
@@ -44,7 +45,24 @@ def pix_confirmation():
 
 @app.route('/payments/pix/<string:payment_id>', methods=['GET'])
 def payment_pix_page(payment_id):
-    return jsonify({ "message": 'Payment pix'})
+    try:
+        uuid_payment_id = UUID(payment_id)
+    except ValueError:
+        return render_template('404.html'), 404
+
+    payment = Payment.query.get(uuid_payment_id)
+
+    if not payment:
+        return render_template('404.html'), 404
+
+    return render_template(
+        'payment.html',
+        payment_id=payment.id,
+        value=payment.value,
+        payment_number=payment.payment_number,
+        host="http://localhost:5000",
+        qr_code=payment.qr_code
+    )
 
 @app.route('/payments/pix/qr_code/<file_name>', methods=['GET'])
 def get_qr_code(file_name):
