@@ -43,7 +43,31 @@ def create_pix_payment():
 
 @app.route('/payments/pix/confimation', methods=['POST'])
 def pix_confirmation():
-    return jsonify({ "message": 'The payment has been confirmed'})
+    data = request.get_json()
+
+    if 'bank_payment_id' not in data and "value" not in data:
+        return jsonify({ 'error': 'Invalid payment data' }), 400
+
+    payment = Payment.query.filter_by(
+        bank_payment_id=data.get('bank_payment_id')
+    ).first()
+
+    if not payment:
+        return jsonify({ 'error': 'Payment not found' }), 404
+    
+    if payment.paid:
+        return jsonify({ 'error': 'The payment has already been confirmed' }), 400
+    
+    if data.get('value') != payment.value:
+        return jsonify({ 'error': 'Invalid payment data' }), 400
+
+    if payment.expiration_date < datetime.now():
+        return jsonify({ 'error': 'The payment has expired' }), 400
+    
+    payment.paid = True
+    db.session.commit()
+
+    return jsonify({ 'message': 'The payment has been confirmed' })
 
 @app.route('/payments/pix/<string:payment_id>', methods=['GET'])
 def payment_pix_page(payment_id):
