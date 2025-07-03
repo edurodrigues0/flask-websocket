@@ -82,10 +82,9 @@ def payment_pix_page(payment_id):
     if payment.paid:
         return render_template(
             'confirmed_payment.html',
+            value=payment.value,
             payment_number=payment.payment_number,
             payment=payment,
-            host='http://localhost:5000',
-            qr_code=payment.qr_code
         )
 
     if not payment:

@@ -87,6 +87,7 @@
     });
     socket.on("payment-confirmed-{{payment_id}}", function () {
       console.log("Pagamento confirmado");
+      location.reload();
     });
   </script>
 </html>

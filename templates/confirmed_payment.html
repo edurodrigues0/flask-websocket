@@ -23,7 +23,7 @@
       <header>
         <div id="qr-code">
           <img
-            src="{{ host }}/payments/pix/qr_code/{{ qr_code }}"
+            src="{{ url_for('static', filename='template_img/qrcode.png' )}}"
             alt="QR Code"
           />
 
@@ -48,7 +48,7 @@
               src="{{ url_for('static', filename='template_img/tag.svg' )}}"
               alt="Ícone de tag"
             />
-            <span>Compra de R$ <strong id="amount">287,90</strong></span>
+            <span>Compra de R$ <strong id="amount">{{ value }}</strong></span>
           </div>
         </aside>
       </header>
