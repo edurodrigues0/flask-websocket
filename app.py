@@ -79,6 +79,9 @@ def payment_pix_page(payment_id):
 
     payment = Payment.query.get(uuid_payment_id)
 
+    if not payment:
+        return render_template('404.html'), 404
+    
     if payment.paid:
         return render_template(
             'confirmed_payment.html',
@@ -103,6 +106,10 @@ def payment_pix_page(payment_id):
 @socketio.on('connect')
 def handle_connect():
     print('Client connected to the server')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected from the server')
 
 @app.route('/payments/pix/qr_code/<file_name>', methods=['GET'])
 def get_qr_code(file_name):
