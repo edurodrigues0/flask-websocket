@@ -85,5 +85,8 @@
     socket.on("connect", function () {
       console.log("Conectado ao servidor de WebSocket");
     });
+    socket.on("payment-confirmed-{{payment_id}}", function () {
+      console.log("Pagamento confirmado");
+    });
   </script>
 </html>
